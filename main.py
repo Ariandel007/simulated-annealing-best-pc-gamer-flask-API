@@ -300,17 +300,29 @@ class CasesResource(Resource):
     def get(self):
         return jsonify(to_dict(lst_case))
 
+lst = []
+
 class MejorPCPresupuesto(Resource):
     @cors.crossdomain(origin='*',
                       methods={"HEAD", "OPTIONS", "GET", "POST"})
     def post(self):
         presupuesto = request.json['presupuesto']
 
-        sa = SimulatedAnnealingPCGamer(1000, 0.045, presupuesto)
+        presupuestoInt = int(presupuesto)
+
+        sa = SimulatedAnnealingPCGamer(1000, 0.045, presupuestoInt)
 
         mejor_pc = sa.algoritmo()
 
+        lst.clear()
+
+        lst.extend(mejor_pc)
+
         return jsonify(to_dict(mejor_pc))
+    @cors.crossdomain(origin='*',
+                      methods={"HEAD", "OPTIONS", "GET", "POST"})
+    def get(self):
+        return jsonify(to_dict(lst))
 
 
 api.add_resource(ProcesadoresResource, '/procesadores')
